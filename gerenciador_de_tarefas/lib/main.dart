@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(
+          title: const Text(
             "Gerenciador De Tarefas",
             textAlign: TextAlign.center,
           ),
@@ -67,6 +67,36 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           );
         }),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const DrawerHeader(
+                decoration: BoxDecoration(),
+                child: Text(
+                  'Gerenciador de Tarefas',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              ListTile(
+                title: const Text('Home (TODO List)'),
+                onTap: () {},
+              ),
+              ListTile(
+                title: const Text('Lembretes'),
+                onTap: () {},
+              ),
+              ListTile(
+                title: const Text('Alarmes'),
+                onTap: () {},
+              ),
+              ListTile(
+                title: const Text('Relógio'),
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
       );
     });
   }
