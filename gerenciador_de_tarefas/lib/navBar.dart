@@ -11,10 +11,10 @@ int _selectedIndex = 0; //_
 
 //vetor de telas
 List<Widget> _stOptions = <Widget>[
-  Alarme(),
-  Lembrete(),
-  Relogio(),
   ToDo(),
+  Lembrete(),
+  Alarme(),
+  Relogio(),
 ];
 
 class NavBar extends StatefulWidget {
