@@ -48,7 +48,7 @@ class _NavBarState extends State<NavBar> {
         appBar: AppBar(
           centerTitle: true,
           title: const Text(
-            "Gerenciador De Tarefas",
+            "Task View",
             textAlign: TextAlign.center,
           ),
           actions: [
