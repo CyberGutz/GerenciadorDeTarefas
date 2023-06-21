@@ -7,7 +7,11 @@ class Notas extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Row(children: const <Widget>[Text('Bloco de Notas')]),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [ListTile(title: const Text('Bloco de Notas'))],
+          //https://stackoverflow.com/questions/56390884/flutterdynamically-add-remove-an-item-in-listview-on-button-click
+        ),
       ),
     );
   }
