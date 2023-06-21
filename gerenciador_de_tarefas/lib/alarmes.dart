@@ -6,11 +6,8 @@ class Alarme extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Alarmes'),
-      ),
       body: Center(
-        child: Row(children: const <Widget>[Text('Placeholder')]),
+        child: Row(children: const <Widget>[Text('Lembretes')]),
       ),
     );
   }

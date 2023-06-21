@@ -6,11 +6,8 @@ class ToDo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('A Fazer'),
-      ),
       body: Center(
-        child: Row(children: const <Widget>[Text('Placeholder')]),
+        child: Row(children: const <Widget>[Text('Home')]),
       ),
     );
   }

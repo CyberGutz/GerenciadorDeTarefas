@@ -48,7 +48,7 @@ class _NavBarState extends State<NavBar> {
         appBar: AppBar(
           centerTitle: true,
           title: const Text(
-            "Gerenciador De Tarefas",
+            "Task View",
             textAlign: TextAlign.center,
           ),
           actions: [
@@ -71,7 +71,7 @@ class _NavBarState extends State<NavBar> {
                   decoration: BoxDecoration(),
                   child: Text('Gerenciador de Tarefas')),
               ListTile(
-                  title: const Text('Home (TODO LIST)'),
+                  title: const Text('Home'),
                   onTap: () {
                     _onItemTapped(0);
                     Navigator.pop(context);
@@ -83,13 +83,13 @@ class _NavBarState extends State<NavBar> {
                     Navigator.pop(context);
                   }),
               ListTile(
-                  title: const Text('Alarmes'),
+                  title: const Text('Notas'),
                   onTap: () {
                     _onItemTapped(2);
                     Navigator.pop(context);
                   }),
               ListTile(
-                  title: const Text('Relógio'),
+                  title: const Text('Configurações'),
                   onTap: () {
                     _onItemTapped(3);
                     Navigator.pop(context);
