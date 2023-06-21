@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gerenciador_de_tarefas/alarmes.dart';
+import 'package:gerenciador_de_tarefas/notas.dart';
 import 'package:gerenciador_de_tarefas/lembretes.dart';
-import 'package:gerenciador_de_tarefas/relogio.dart';
+import 'package:gerenciador_de_tarefas/configs.dart';
 import 'package:gerenciador_de_tarefas/theme_model.dart';
 import 'package:gerenciador_de_tarefas/todo.dart';
 import 'package:provider/provider.dart';
@@ -13,8 +13,8 @@ int _selectedIndex = 0; //_
 List<Widget> _stOptions = <Widget>[
   ToDo(),
   Lembrete(),
-  Alarme(),
-  Relogio(),
+  Notas(),
+  Configs(),
 ];
 
 class NavBar extends StatefulWidget {
@@ -71,7 +71,7 @@ class _NavBarState extends State<NavBar> {
                   decoration: BoxDecoration(),
                   child: Text('Gerenciador de Tarefas')),
               ListTile(
-                  title: const Text('Home (TODO LIST)'),
+                  title: const Text('Home'),
                   onTap: () {
                     _onItemTapped(0);
                     Navigator.pop(context);
@@ -83,13 +83,13 @@ class _NavBarState extends State<NavBar> {
                     Navigator.pop(context);
                   }),
               ListTile(
-                  title: const Text('Alarmes'),
+                  title: const Text('Bloco de Notas'),
                   onTap: () {
                     _onItemTapped(2);
                     Navigator.pop(context);
                   }),
               ListTile(
-                  title: const Text('Relógio'),
+                  title: const Text('Configurações'),
                   onTap: () {
                     _onItemTapped(3);
                     Navigator.pop(context);
