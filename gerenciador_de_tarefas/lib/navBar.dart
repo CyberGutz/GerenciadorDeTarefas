@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gerenciador_de_tarefas/notas.dart';
+import 'package:gerenciador_de_tarefas/notasHome.dart';
 import 'package:gerenciador_de_tarefas/lembretes.dart';
 import 'package:gerenciador_de_tarefas/configs.dart';
 import 'package:gerenciador_de_tarefas/theme_model.dart';
@@ -13,7 +13,7 @@ int _selectedIndex = 0; //_
 List<Widget> _stOptions = <Widget>[
   ToDo(),
   Lembrete(),
-  Notas(),
+  NotasHome(),
   Configs(),
 ];
 
@@ -57,9 +57,11 @@ class _NavBarState extends State<NavBar> {
                     ? Icons.nightlight_round
                     : Icons.wb_sunny),
                 onPressed: () {
-                  themeNotifier.isDark
-                      ? themeNotifier.isDark = false
-                      : themeNotifier.isDark = true;
+                  setState(() {
+                    themeNotifier.isDark
+                        ? themeNotifier.isDark = false
+                        : themeNotifier.isDark = true;
+                  });
                 })
           ],
         ),
