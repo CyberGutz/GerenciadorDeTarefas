@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gerenciador_de_tarefas/navBar.dart';
 import 'package:provider/provider.dart';
 import 'package:gerenciador_de_tarefas/theme_model.dart';
+
+import 'appTheme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized;
@@ -12,20 +15,26 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // enterFullScreen();
     return ChangeNotifierProvider(
       create: (_) => ThemeModel(),
       child: Consumer<ThemeModel>(
           builder: (context, ThemeModel themeNotifier, child) {
         return MaterialApp(
           title: 'Flutter Demo',
-          theme: themeNotifier.isDark ? ThemeData.dark() : ThemeData.light(),
+          theme: themeNotifier.isDark ? AppTheme.darkTheme : ThemeData.light(),
           debugShowCheckedModeBanner: false,
           home: NavBar(0),
         );
       }),
     );
   }
+
+  void enterFullScreen() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+  }
 }
+
 
 // class MyHomePage extends StatefulWidget {
 //   @override

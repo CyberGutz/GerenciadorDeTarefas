@@ -2,8 +2,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static final _nomeDoBanco = "banco_gerenciador_de_tarefas.db";
-  static final _versaoDoBanco = 1;
+  static const _nomeDoBanco = "banco_gerenciador_de_tarefas.db";
+  static const _versaoDoBanco = 1;
 
   // Defina as tabelas e colunas aqui
 
