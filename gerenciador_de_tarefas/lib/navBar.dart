@@ -70,28 +70,54 @@ class _NavBarState extends State<NavBar> {
             padding: EdgeInsets.zero,
             children: [
               const DrawerHeader(
+                  margin: EdgeInsets.all(20),
                   decoration: BoxDecoration(),
-                  child: Text('Gerenciador de Tarefas')),
+                  child: ListTile(
+                      title: Text(
+                    "TaskView \nMenu Principal",
+                    textAlign: TextAlign.center,
+                  ))),
+              // child: Text(
+              //   "Gerenciador de Tarefas \n\nClique na opção desejada",
+              //   textAlign: TextAlign.center,
+              //   style: TextStyle(color: Colors.white),
+              // )),
               ListTile(
-                  title: const Text('Home'),
+                  title: const Text(
+                    'Home',
+                    textAlign: TextAlign.center,
+                  ),
+                  style: ListTileStyle.drawer,
                   onTap: () {
                     _onItemTapped(0);
                     Navigator.pop(context);
                   }),
               ListTile(
-                  title: const Text('Lembretes'),
+                  title: const Text(
+                    'Lembretes',
+                    textAlign: TextAlign.center,
+                  ),
+                  style: ListTileStyle.drawer,
                   onTap: () {
                     _onItemTapped(1);
                     Navigator.pop(context);
                   }),
               ListTile(
-                  title: const Text('Bloco de Notas'),
+                  style: ListTileStyle.drawer,
+                  title: const Text(
+                    'Bloco de Notas',
+                    textAlign: TextAlign.center,
+                  ),
                   onTap: () {
                     _onItemTapped(2);
                     Navigator.pop(context);
                   }),
               ListTile(
-                  title: const Text('Configurações'),
+                  style: ListTileStyle.drawer,
+                  title: const Text(
+                    'Configurações',
+                    textAlign: TextAlign.center,
+                  ),
                   onTap: () {
                     _onItemTapped(3);
                     Navigator.pop(context);
