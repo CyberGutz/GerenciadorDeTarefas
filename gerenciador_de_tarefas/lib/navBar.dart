@@ -74,7 +74,8 @@ class _NavBarState extends State<NavBar> {
                   decoration: BoxDecoration(),
                   child: ListTile(
                       title: Text(
-                    "TaskView \nMenu Principal",
+                    "\nTaskView \n\n\nMenu Principal",
+                    style: TextStyle(fontSize: 18),
                     textAlign: TextAlign.center,
                   ))),
               // child: Text(
