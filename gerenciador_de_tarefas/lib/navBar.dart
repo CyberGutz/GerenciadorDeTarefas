@@ -6,29 +6,31 @@ import 'package:gerenciador_de_tarefas/theme_model.dart';
 import 'package:gerenciador_de_tarefas/todo.dart';
 import 'package:provider/provider.dart';
 
-//Índice de seleção da tela
-int _selectedIndex = 0; //_
-
-//vetor de telas
-List<Widget> _stOptions = <Widget>[
-  ToDo(),
-  Lembrete(),
-  NotasHome(),
-  Configs(),
-];
-
 class NavBar extends StatefulWidget {
-  int _opcao;
+  final int initialIndex;
 
-  NavBar(this._opcao);
+  NavBar({required this.initialIndex});
 
   @override
-  _NavBarState createState() => _NavBarState(this._opcao);
+  _NavBarState createState() => _NavBarState();
 }
 
 class _NavBarState extends State<NavBar> {
-  _NavBarState(this._opcao);
-  int _opcao;
+  int _selectedIndex = 0;
+  TextStyle _selectedItemStyle = TextStyle(color: Colors.red);
+
+  final List<Widget> _stOptions = <Widget>[
+    ToDo(),
+    Lembretes(),
+    NotasHome(),
+    Configs(),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -37,97 +39,109 @@ class _NavBarState extends State<NavBar> {
   }
 
   @override
-  void initState() {
-    _selectedIndex = _opcao;
-  }
-
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(
-        builder: (context, ThemeModel themeNotifier, child) {
-      return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text(
-            "Task View",
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            IconButton(
+      builder: (context, themeNotifier, child) {
+        return Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: const Text(
+              "Task View",
+              textAlign: TextAlign.center,
+            ),
+            actions: [
+              IconButton(
                 icon: Icon(themeNotifier.isDark
                     ? Icons.nightlight_round
                     : Icons.wb_sunny),
                 onPressed: () {
                   setState(() {
-                    themeNotifier.isDark
-                        ? themeNotifier.isDark = false
-                        : themeNotifier.isDark = true;
+                    themeNotifier.isDark = !themeNotifier.isDark;
                   });
-                })
-          ],
-        ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              const DrawerHeader(
+                },
+              ),
+            ],
+          ),
+          drawer: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                const DrawerHeader(
                   margin: EdgeInsets.all(20),
-                  decoration: BoxDecoration(),
                   child: ListTile(
-                      title: Text(
-                    "\nTaskView \n\n\nMenu Principal",
-                    style: TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ))),
-              // child: Text(
-              //   "Gerenciador de Tarefas \n\nClique na opção desejada",
-              //   textAlign: TextAlign.center,
-              //   style: TextStyle(color: Colors.white),
-              // )),
-              ListTile(
-                  title: const Text(
+                    title: Text(
+                      "\nTaskView \n\n\nMenu Principal",
+                      style: TextStyle(fontSize: 18),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  title: Text(
                     'Home',
                     textAlign: TextAlign.center,
+                    style: _selectedIndex == 0 && themeNotifier.isDark
+                        ? _selectedItemStyle
+                        : null,
                   ),
                   style: ListTileStyle.drawer,
+                  selected: _selectedIndex == 0,
                   onTap: () {
                     _onItemTapped(0);
                     Navigator.pop(context);
-                  }),
-              ListTile(
-                  title: const Text(
+                  },
+                ),
+                ListTile(
+                  title: Text(
                     'Lembretes',
                     textAlign: TextAlign.center,
+                    style: _selectedIndex == 1 && themeNotifier.isDark
+                        ? _selectedItemStyle
+                        : null,
                   ),
                   style: ListTileStyle.drawer,
+                  selected: _selectedIndex == 1,
                   onTap: () {
                     _onItemTapped(1);
                     Navigator.pop(context);
-                  }),
-              ListTile(
-                  style: ListTileStyle.drawer,
-                  title: const Text(
+                  },
+                ),
+                ListTile(
+                  title: Text(
                     'Bloco de Notas',
                     textAlign: TextAlign.center,
+                    style: _selectedIndex == 2 && themeNotifier.isDark
+                        ? _selectedItemStyle
+                        : null,
                   ),
+                  style: ListTileStyle.drawer,
+                  selected: _selectedIndex == 2,
                   onTap: () {
                     _onItemTapped(2);
                     Navigator.pop(context);
-                  }),
-              ListTile(
-                  style: ListTileStyle.drawer,
-                  title: const Text(
+                  },
+                ),
+                ListTile(
+                  title: Text(
                     'Configurações',
                     textAlign: TextAlign.center,
+                    style: _selectedIndex == 3 && themeNotifier.isDark
+                        ? _selectedItemStyle
+                        : null,
                   ),
+                  style: ListTileStyle.drawer,
+                  selected: _selectedIndex == 3,
                   onTap: () {
                     _onItemTapped(3);
                     Navigator.pop(context);
-                  }),
-            ],
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
-        body: _stOptions.elementAt(_selectedIndex),
-      );
-    });
+          body: _stOptions.elementAt(_selectedIndex),
+        );
+      },
+    );
   }
 }
