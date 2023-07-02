@@ -65,7 +65,7 @@ class ToDo extends StatefulWidget {
 class _ToDoState extends State<ToDo> {
   List<Task> tasks = []; // Lista de tarefas
 
-  TextEditingController _taskController = TextEditingController();
+  final TextEditingController _taskController = TextEditingController();
   String _searchQuery = '';
 
   @override
@@ -244,18 +244,18 @@ class _ToDoState extends State<ToDo> {
             padding: const EdgeInsets.all(10),
             child: Container(
               decoration: BoxDecoration(
-                color: Color.fromARGB(113, 170, 168, 168),
+                color: const Color.fromARGB(113, 170, 168, 168),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TextField(
                 style: TextStyle(
                   color: textColor,
                 ),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Pesquisar tarefa',
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.all(10),
-                  prefixIcon: const Icon(Icons.search),
+                  contentPadding: EdgeInsets.all(10),
+                  prefixIcon: Icon(Icons.search),
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -337,7 +337,7 @@ class _ToDoState extends State<ToDo> {
                               ),
                             ),
                             IconButton(
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.edit,
                                 color: Color.fromARGB(255, 255, 82, 2),
                               ),

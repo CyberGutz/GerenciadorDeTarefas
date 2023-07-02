@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gerenciador_de_tarefas/navBar.dart';
 import 'package:provider/provider.dart';
 import 'package:gerenciador_de_tarefas/theme_model.dart';
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
             theme:
                 themeNotifier.isDark ? AppTheme.darkTheme : ThemeData.light(),
             debugShowCheckedModeBanner: false,
-            home: NavBar(initialIndex: 1),
+            home: NavBar(initialIndex: 0),
           );
         },
       ),

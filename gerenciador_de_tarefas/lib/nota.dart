@@ -1,38 +1,36 @@
-import 'dart:convert';
-
 class Nota {
-  late int id;
   late String titulo;
-  late String conteudo;
-  late DateTime dataCriado;
-  late DateTime dataLastEdited;
-  int isArquivado = 0;
+  String conteudo = "teste0";
+  DateTime dataCriado = DateTime.now();
+  DateTime dataLastEdited = DateTime.now();
 
-  Nota(this.id, this.titulo, this.conteudo, this.dataCriado,
-      this.dataLastEdited);
+  Nota(this.titulo, {conteudo, dataCriado, dataLastEdited});
 
-  Map<String, dynamic> toMap(bool forUpdate) {
-    var data = {
-      'id': id,
-      'titulo': utf8.encode(titulo),
-      'conteudo': utf8.encode(conteudo),
-      'dataCriado': epochFromDate(dataCriado),
-      'dataLastEdited': epochFromDate(dataLastEdited),
-      'isArquivado': isArquivado
+  // Converte a tarefa para um mapa JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'titulo': titulo,
+      'conteudo': conteudo,
+      'dataCriado': dataCriado.toIso8601String(),
+      'dataLastEdited': dataLastEdited.toIso8601String(),
     };
-
-    if (forUpdate) {
-      data["id"] = this.id;
-    }
-
-    return data;
   }
 
-  int epochFromDate(DateTime dt) {
-    return dt.millisecondsSinceEpoch ~/ 1000;
+  // Cria uma instância de Task a partir de um mapa JSON
+  factory Nota.fromJson(Map<String, dynamic> json) {
+    return Nota(
+      json['titulo'] as String,
+      conteudo: json['conteudo'] as String,
+      dataCriado: DateTime.parse(json['dataCriado'] as String),
+      dataLastEdited: DateTime.parse(json['dataLastEdited']),
+    );
   }
 
-  void arquiveEstaNota() {
-    isArquivado = 1;
+  void setTitle(String titulo) {
+    this.titulo = titulo;
+  }
+
+  void setConteudo(String conteudo) {
+    this.conteudo = conteudo;
   }
 }
