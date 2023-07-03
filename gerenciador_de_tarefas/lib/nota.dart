@@ -1,8 +1,9 @@
 class Nota {
   late String titulo;
-  String conteudo = "teste0";
+  String conteudo = "";
   DateTime dataCriado = DateTime.now();
   DateTime dataLastEdited = DateTime.now();
+  bool isSelected = false;
 
   Nota(this.titulo, {conteudo, dataCriado, dataLastEdited});
 

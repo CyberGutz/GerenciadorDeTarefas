@@ -1,57 +1,95 @@
 import 'package:flutter/material.dart';
+import 'package:gerenciador_de_tarefas/nota.dart';
+import 'package:gerenciador_de_tarefas/nota_preference.dart';
 
 class NotaPage extends StatefulWidget {
   final String title;
+  final int index;
   late String content;
 
-  NotaPage(this.title, this.content, {super.key});
+  NotaPage(this.title, this.content, this.index, {super.key});
   @override
   NotaPageState createState() => NotaPageState();
 }
 
 class NotaPageState extends State<NotaPage> {
+  List<Nota> notas = [];
   late String titulo;
   late String conteudo;
+  late int index;
   final _controllerNota = TextEditingController();
+
+  void loadnotas() async {
+    List<Nota> notasSalvas = await NotaPreferences.loadNotas();
+    setState(() {
+      notas = notasSalvas.reversed.toList(); // Inverte a lista de notas
+    });
+  }
+
+  // Salva as tarefas no SharedPreferences
+  void savenotas() async {
+    await NotaPreferences.saveNotas(notas);
+  }
+
+  // void salvar() {
+  //   setState(() {
+  //     nota.conteudo = conteudo;
+  //     notas[index] = nota;
+  //     savenotas();
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
+    loadnotas();
     titulo = widget.title;
     conteudo = widget.content;
+    index = widget.index;
     _controllerNota.text = widget.content;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            titulo,
-            textAlign: TextAlign.start,
-          ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new),
-            onPressed: () {
-              Navigator.pop(context, conteudo);
-            },
-          ),
-        ),
-        body: Center(
-            child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: SingleChildScrollView(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        TextField(
-                          controller: _controllerNota,
-                          maxLines: 25,
-                          onChanged: (content) => setState(() {
-                            conteudo = content;
-                          }),
-                        )
-                      ]),
-                ))));
+    return WillPopScope(
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                titulo,
+                textAlign: TextAlign.start,
+              ),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new),
+                onPressed: () {
+                  Navigator.pop(context, conteudo);
+                },
+              ),
+            ),
+            body: Center(
+                child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: SingleChildScrollView(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            TextField(
+                              controller: _controllerNota,
+                              maxLines: 25,
+                              onChanged: (content) => setState(() {
+                                loadnotas();
+                                conteudo = content;
+                                Nota nota = notas[index];
+                                nota.conteudo = content;
+                                notas[index] = nota;
+                                savenotas();
+                                // salvar();
+                              }),
+                            )
+                          ]),
+                    )))),
+        onWillPop: () async {
+          Navigator.pop(context, conteudo);
+          return true;
+        });
   }
 }

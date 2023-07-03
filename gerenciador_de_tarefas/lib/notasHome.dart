@@ -15,6 +15,7 @@ class NotasHome extends StatefulWidget {
 
 class _NotasHomeState extends State<NotasHome> {
   List<Nota> notas = [];
+  List<Nota> selectedList = [];
 
   final TextEditingController _notaController = TextEditingController();
   String _searchQuery = '';
@@ -22,6 +23,7 @@ class _NotasHomeState extends State<NotasHome> {
   @override
   void initState() {
     super.initState();
+    selectedList.clear();
     loadnotas(); // Carrega as tarefas ao inicializar o widget
   }
 
@@ -101,11 +103,7 @@ class _NotasHomeState extends State<NotasHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            title: const Text(
-          "Bloco de Notas",
-          textAlign: TextAlign.center,
-        )),
+        appBar: getAppBar(),
         body: Center(
             child: Padding(
           padding: const EdgeInsets.all(10),
@@ -137,12 +135,13 @@ class _NotasHomeState extends State<NotasHome> {
     notas[index].dataLastEdited = DateTime.now();
     String conteudo = notas[index].conteudo;
     Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => NotaPage(notas[index].titulo, conteudo)))
-        .then((value) {
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                NotaPage(notas[index].titulo, conteudo, index))).then((value) {
       if (value != null) {
         notas[index].conteudo = '$value';
+        savenotas();
       }
     });
     savenotas();
@@ -161,6 +160,37 @@ class _NotasHomeState extends State<NotasHome> {
     return formated;
   }
 
+  AppBar getAppBar() {
+    return AppBar(
+      title: Text(
+        selectedList.isEmpty
+            ? "Bloco de Notas"
+            : "${selectedList.length} itens selecionados",
+        textAlign: TextAlign.start,
+      ),
+      actions: [
+        selectedList.isEmpty
+            ? Container()
+            : IconButton(
+                icon: const Icon(
+                  Icons.delete,
+                  size: 25,
+                  color: Colors.red,
+                ),
+                onPressed: () {
+                  setState(() {
+                    for (int i = 0; i < selectedList.length; i++) {
+                      notas.removeWhere((element) =>
+                          element.titulo == selectedList[i].titulo);
+                    }
+                    selectedList.clear();
+                  });
+                },
+              )
+      ],
+    );
+  }
+
   GridTile gridTile(index) {
     return GridTile(
         footer: GridTileBar(
@@ -170,16 +200,61 @@ class _NotasHomeState extends State<NotasHome> {
             textAlign: TextAlign.center,
           ),
         ),
-        child: ListTile(
-          title: Text(
-            notas[index].titulo,
-            textAlign: TextAlign.center,
-          ),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          tileColor: Theme.of(context).colorScheme.secondary,
-          onTap: () => pusharPag(notas, index, context),
-          onLongPress: () => {notas.removeAt(index)},
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            ListTile(
+              selected: notas[index].isSelected,
+              selectedColor: Colors.grey,
+              title: Text(
+                notas[index].titulo,
+                textAlign: TextAlign.center,
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              tileColor: Theme.of(context).colorScheme.secondary,
+              onTap: () {
+                if (selectedList.isEmpty) {
+                  pusharPag(notas, index, context);
+                } else {
+                  switch (notas[index].isSelected) {
+                    case true:
+                      setState(() {
+                        selectedList.remove(notas[index]);
+                        notas[index].isSelected = false;
+                      });
+                      break;
+                    case false:
+                      setState(() {
+                        notas[index].isSelected = true;
+                        selectedList.add(notas[index]);
+                      });
+                      break;
+                  }
+                }
+              },
+              onLongPress: () {
+                setState(() {
+                  if (!selectedList.contains(notas[index])) {
+                    notas[index].isSelected = true;
+                    selectedList.add(notas[index]);
+                  }
+                });
+              },
+            ),
+            notas[index].isSelected
+                ? const Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.check_circle,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  )
+                : Container()
+          ],
         ));
   }
 }
