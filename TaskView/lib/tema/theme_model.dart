@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:gerenciador_de_tarefas/theme_preference.dart';
+import 'package:gerenciador_de_tarefas/preferences/theme_preference.dart';
 
 class ThemeModel extends ChangeNotifier {
   bool _isDark = false;

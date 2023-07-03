@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gerenciador_de_tarefas/nota.dart';
-import 'package:gerenciador_de_tarefas/nota_preference.dart';
+import 'package:gerenciador_de_tarefas/notas/nota.dart';
+import 'package:gerenciador_de_tarefas/preferences/nota_preference.dart';
 
 class NotaPage extends StatefulWidget {
   final String title;
@@ -19,6 +19,7 @@ class NotaPageState extends State<NotaPage> {
   late int index;
   final _controllerNota = TextEditingController();
 
+  // Carrega as tarefas do Shared Preferences
   void loadnotas() async {
     List<Nota> notasSalvas = await NotaPreferences.loadNotas();
     setState(() {
@@ -31,14 +32,7 @@ class NotaPageState extends State<NotaPage> {
     await NotaPreferences.saveNotas(notas);
   }
 
-  // void salvar() {
-  //   setState(() {
-  //     nota.conteudo = conteudo;
-  //     notas[index] = nota;
-  //     savenotas();
-  //   });
-  // }
-
+  // Inicia as variáveis e chama a função loadnotas()
   @override
   void initState() {
     super.initState();
@@ -61,6 +55,7 @@ class NotaPageState extends State<NotaPage> {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios_new),
               onPressed: () {
+                savenotas();
                 Navigator.pop(context, conteudo);
               },
             ),

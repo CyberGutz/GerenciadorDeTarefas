@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'nota.dart';
+import '../notas/nota.dart';
 
 class NotaPreferences {
   static const String _kNoteListKey = 'noteList';

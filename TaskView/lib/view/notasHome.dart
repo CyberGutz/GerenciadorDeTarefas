@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'nota.dart';
-import 'notaPage.dart';
-import 'nota_preference.dart';
+import '../notas/nota.dart';
+import '../notas/nota_page.dart';
+import '../preferences/nota_preference.dart';
 
 class NotasHome extends StatefulWidget {
   const NotasHome({super.key});
@@ -17,9 +16,10 @@ class _NotasHomeState extends State<NotasHome> {
   List<Nota> notas = [];
   List<Nota> selectedList = [];
 
+  // Controler para a _showCreateNoteDialog
   final TextEditingController _notaController = TextEditingController();
-  String _searchQuery = '';
 
+  // Inicia as variáveis e carrega a lista de notas
   @override
   void initState() {
     super.initState();
@@ -40,6 +40,7 @@ class _NotasHomeState extends State<NotasHome> {
     await NotaPreferences.saveNotas(notas);
   }
 
+  // Abre um Dialog que cria uma nova nota e atribui um título a ela
   void _showCreateNoteDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -100,6 +101,7 @@ class _NotasHomeState extends State<NotasHome> {
     );
   }
 
+  // Tela principal das notas
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,6 +133,7 @@ class _NotasHomeState extends State<NotasHome> {
         ));
   }
 
+  // Faz push à página da nota por meio do Navigator.push
   void pusharPag(List<Nota> notas, int index, BuildContext context) {
     notas[index].dataLastEdited = DateTime.now();
     String conteudo = notas[index].conteudo;
@@ -150,6 +153,7 @@ class _NotasHomeState extends State<NotasHome> {
     });
   }
 
+  // Retorna o DateTime no formato 'dd/MM/yy'
   String getDataFormatada(DateTime data) {
     final DateFormat formatter = DateFormat('dd-MM-yy');
     final String formated = formatter.format(data);
@@ -157,6 +161,7 @@ class _NotasHomeState extends State<NotasHome> {
     return formated;
   }
 
+  // AppBar modulável, se não estiver em modo de seleção, ela exibe "Bloco de Notas", caso contrário, ela exibe quantos elementos estão selecionados e um botão para removê-los da lista de notas.
   AppBar getAppBar() {
     return AppBar(
       title: Text(
@@ -188,6 +193,7 @@ class _NotasHomeState extends State<NotasHome> {
     );
   }
 
+  // GridTiles que serão gerados pelo GridView.builder
   GridTile gridTile(index) {
     return GridTile(
         footer: GridTileBar(
@@ -211,6 +217,7 @@ class _NotasHomeState extends State<NotasHome> {
                   borderRadius: BorderRadius.circular(10)),
               tileColor: Theme.of(context).colorScheme.secondary,
               onTap: () {
+                savenotas();
                 if (selectedList.isEmpty) {
                   pusharPag(notas, index, context);
                 } else {

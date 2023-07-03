@@ -1,8 +1,9 @@
 class Nota {
   late String titulo;
   String conteudo = "";
-  DateTime dataCriado = DateTime.now();
-  DateTime dataLastEdited = DateTime.now();
+  DateTime dataCriado = DateTime.now(); // Data em que a nota foi criada
+  DateTime dataLastEdited =
+      DateTime.now(); // Data em que a nota foi editada pela última vez
   bool isSelected = false;
 
   Nota(this.titulo, {conteudo, dataCriado, dataLastEdited});
@@ -27,10 +28,12 @@ class Nota {
     );
   }
 
+  // Setter para o título
   void setTitle(String titulo) {
     this.titulo = titulo;
   }
 
+  // Setter para o conteúdo
   void setConteudo(String conteudo) {
     this.conteudo = conteudo;
   }
