@@ -24,10 +24,10 @@ class _NotasHomeState extends State<NotasHome> {
   void initState() {
     super.initState();
     selectedList.clear();
-    loadnotas(); // Carrega as tarefas ao inicializar o widget
+    loadnotas(); // Carrega as notas ao inicializar o widget
   }
 
-  // Carrega as tarefas do SharedPreferences
+  // Carrega as notas do SharedPreferences
   void loadnotas() async {
     List<Nota> notasSalvas = await NotaPreferences.loadNotas();
     setState(() {
@@ -35,7 +35,7 @@ class _NotasHomeState extends State<NotasHome> {
     });
   }
 
-  // Salva as tarefas no SharedPreferences
+  // Salva as notas no SharedPreferences
   void savenotas() async {
     await NotaPreferences.saveNotas(notas);
   }
@@ -73,7 +73,7 @@ class _NotasHomeState extends State<NotasHome> {
               onPressed: () {
                 setState(() {
                   notas.insert(
-                    0, // Insere a nova tarefa no início da lista
+                    0, // Insere a nova nota no início da lista
                     Nota(
                       _notaController.text,
                       conteudo: "",
@@ -131,7 +131,7 @@ class _NotasHomeState extends State<NotasHome> {
         ));
   }
 
-  void pusharPag(List<Nota> notas, int index, BuildContext context) async {
+  void pusharPag(List<Nota> notas, int index, BuildContext context) {
     notas[index].dataLastEdited = DateTime.now();
     String conteudo = notas[index].conteudo;
     Navigator.push(
@@ -140,17 +140,14 @@ class _NotasHomeState extends State<NotasHome> {
             builder: (context) =>
                 NotaPage(notas[index].titulo, conteudo, index))).then((value) {
       if (value != null) {
-        notas[index].conteudo = '$value';
-        savenotas();
+        setState(() {
+          notas[index].setConteudo('$value');
+          notas[index].dataLastEdited =
+              DateTime.now(); // Atualiza a data de última edição
+          savenotas(); // Salva as notas atualizadas
+        });
       }
     });
-    savenotas();
-  }
-
-  String recebeConteudo(Future<void> content) {
-    String conteudo = "$content";
-
-    return conteudo;
   }
 
   String getDataFormatada(DateTime data) {

@@ -23,7 +23,7 @@ class Nota {
       json['titulo'] as String,
       conteudo: json['conteudo'] as String,
       dataCriado: DateTime.parse(json['dataCriado'] as String),
-      dataLastEdited: DateTime.parse(json['dataLastEdited']),
+      dataLastEdited: DateTime.parse(json['dataLastEdited'] as String),
     );
   }
 

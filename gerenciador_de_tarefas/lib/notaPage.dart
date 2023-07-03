@@ -52,44 +52,48 @@ class NotaPageState extends State<NotaPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        child: Scaffold(
-            appBar: AppBar(
-              title: Text(
-                titulo,
-                textAlign: TextAlign.start,
-              ),
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new),
-                onPressed: () {
-                  Navigator.pop(context, conteudo);
-                },
-              ),
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              titulo,
+              textAlign: TextAlign.start,
             ),
-            body: Center(
-                child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: SingleChildScrollView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            TextField(
-                              controller: _controllerNota,
-                              maxLines: 25,
-                              onChanged: (content) => setState(() {
-                                loadnotas();
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new),
+              onPressed: () {
+                Navigator.pop(context, conteudo);
+              },
+            ),
+          ),
+          body: Center(
+              child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: SingleChildScrollView(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TextField(
+                            controller: _controllerNota,
+                            maxLines: 25,
+                            onChanged: (content) {
+                              setState(() {
                                 conteudo = content;
-                                Nota nota = notas[index];
-                                nota.conteudo = content;
-                                notas[index] = nota;
-                                savenotas();
-                                // salvar();
-                              }),
-                            )
-                          ]),
-                    )))),
-        onWillPop: () async {
-          Navigator.pop(context, conteudo);
-          return true;
-        });
+                                notas[index].setConteudo(
+                                    content); // Atualiza o conteúdo da nota na lista
+                              });
+                              savenotas();
+                            },
+                          )
+                        ]),
+                  )))),
+      onWillPop: () async {
+        conteudo = _controllerNota.text;
+        notas[index]
+            .setConteudo(conteudo); // Atualiza o conteúdo da nota na lista
+        savenotas();
+        Navigator.pop(context, conteudo);
+        return true;
+      },
+    );
   }
 }
