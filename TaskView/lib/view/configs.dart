@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/tema/theme_model.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class Configs extends StatefulWidget {
   const Configs({super.key});

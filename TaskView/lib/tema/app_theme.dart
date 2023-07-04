@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static const Color _lightPrimary = Color.fromARGB(255, 211, 211, 211);
   static const Color _lightSecondary = Color.fromARGB(255, 182, 182, 182);
-  static const Color _lightTertiary = Colors.teal;
+  static Color _lightTertiary = Colors.teal;
   static const Color _lightOnPrimary = Colors.black;
   static const Color _lightOnSecondary = Colors.black;
   static const Color _lightOnTertiary = Colors.black;
@@ -14,7 +14,7 @@ class AppTheme {
 
   static const Color _darkPrimary = Colors.black;
   static const Color _darkSecondary = Color.fromRGBO(33, 33, 33, 1);
-  static const Color _darkTertiary = Color.fromRGBO(255, 160, 0, 1);
+  static Color _darkTertiary = Color.fromRGBO(255, 160, 0, 1);
   static const Color _darkOnPrimary = Colors.white;
   static const Color _darkOnSecondary = Colors.white;
   static const Color _darkOnTertiary = Colors.black;
@@ -346,11 +346,11 @@ class AppTheme {
     useMaterial3: true,
   );
 
-  Color setPrimary(bool flag) {
+  static void setAccentColor(bool flag, Color color) {
     if (flag == true) {
-      return Colors.black;
+      _darkTertiary = color;
     } else {
-      return Colors.white;
+      _lightTertiary = color;
     }
   }
 

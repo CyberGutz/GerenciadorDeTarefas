@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/view/notasHome.dart';
-import 'package:gerenciador_de_tarefas/view/lembretes.dart';
 import 'package:gerenciador_de_tarefas/view/configs.dart';
 import 'package:gerenciador_de_tarefas/view/todo.dart';
 import 'package:gerenciador_de_tarefas/tema/theme_model.dart';
@@ -22,7 +21,6 @@ class _NavBarState extends State<NavBar> {
   // Lista de páginas que poderão ser navegadas.
   final List<Widget> _stOptions = <Widget>[
     const ToDo(),
-    const Lembretes(),
     const NotasHome(),
     const Configs(),
   ];
@@ -85,7 +83,7 @@ class _NavBarState extends State<NavBar> {
                 ),
                 ListTile(
                   title: Text(
-                    'Lembretes',
+                    'Bloco de Notas',
                     textAlign: TextAlign.center,
                     style: _selectedIndex == 1 && themeNotifier.isDark
                         ? _selectedItemStyle
@@ -100,7 +98,7 @@ class _NavBarState extends State<NavBar> {
                 ),
                 ListTile(
                   title: Text(
-                    'Bloco de Notas',
+                    'Configurações',
                     textAlign: TextAlign.center,
                     style: _selectedIndex == 2 && themeNotifier.isDark
                         ? _selectedItemStyle
@@ -110,21 +108,6 @@ class _NavBarState extends State<NavBar> {
                   selected: _selectedIndex == 2,
                   onTap: () {
                     _onItemTapped(2);
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  title: Text(
-                    'Configurações',
-                    textAlign: TextAlign.center,
-                    style: _selectedIndex == 3 && themeNotifier.isDark
-                        ? _selectedItemStyle
-                        : null,
-                  ),
-                  style: ListTileStyle.drawer,
-                  selected: _selectedIndex == 3,
-                  onTap: () {
-                    _onItemTapped(3);
                     Navigator.pop(context);
                   },
                 ),
