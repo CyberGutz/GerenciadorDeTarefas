@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gerenciador_de_tarefas/notasHome.dart';
-import 'package:gerenciador_de_tarefas/lembretes.dart';
-import 'package:gerenciador_de_tarefas/configs.dart';
-import 'package:gerenciador_de_tarefas/theme_model.dart';
-import 'package:gerenciador_de_tarefas/todo.dart';
+import 'package:gerenciador_de_tarefas/view/notasHome.dart';
+import 'package:gerenciador_de_tarefas/view/configs.dart';
+import 'package:gerenciador_de_tarefas/view/todo.dart';
+import 'package:gerenciador_de_tarefas/tema/theme_model.dart';
 import 'package:provider/provider.dart';
 
 class NavBar extends StatefulWidget {
@@ -17,27 +16,30 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
   int _selectedIndex = 0;
-  TextStyle _selectedItemStyle = TextStyle(color: Colors.red);
+  final TextStyle _selectedItemStyle = const TextStyle(color: Colors.red);
 
+  // Lista de páginas que poderão ser navegadas.
   final List<Widget> _stOptions = <Widget>[
-    ToDo(),
-    Lembretes(),
-    NotasHome(),
-    Configs(),
+    const ToDo(),
+    const NotasHome(),
+    const Configs(),
   ];
 
+  // Inicia a variável _selectedIndex
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.initialIndex;
   }
 
+  // Muda _selectedIndex de acordo com o item clicado no navBar
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
+  // Constrói a página principal base, nela, os conteúdos da lista de páginas vão ser mostrados numa mesma base, sem precisar de navigator.push, mostrando um único AppBar com apenas o título do aplicativo: TaskView
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(
@@ -49,18 +51,6 @@ class _NavBarState extends State<NavBar> {
               "Task View",
               textAlign: TextAlign.center,
             ),
-            actions: [
-              IconButton(
-                icon: Icon(themeNotifier.isDark
-                    ? Icons.nightlight_round
-                    : Icons.wb_sunny),
-                onPressed: () {
-                  setState(() {
-                    themeNotifier.isDark = !themeNotifier.isDark;
-                  });
-                },
-              ),
-            ],
           ),
           drawer: Drawer(
             child: ListView(
@@ -93,7 +83,7 @@ class _NavBarState extends State<NavBar> {
                 ),
                 ListTile(
                   title: Text(
-                    'Lembretes',
+                    'Bloco de Notas',
                     textAlign: TextAlign.center,
                     style: _selectedIndex == 1 && themeNotifier.isDark
                         ? _selectedItemStyle
@@ -108,7 +98,7 @@ class _NavBarState extends State<NavBar> {
                 ),
                 ListTile(
                   title: Text(
-                    'Bloco de Notas',
+                    'Configurações',
                     textAlign: TextAlign.center,
                     style: _selectedIndex == 2 && themeNotifier.isDark
                         ? _selectedItemStyle
@@ -118,21 +108,6 @@ class _NavBarState extends State<NavBar> {
                   selected: _selectedIndex == 2,
                   onTap: () {
                     _onItemTapped(2);
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  title: Text(
-                    'Configurações',
-                    textAlign: TextAlign.center,
-                    style: _selectedIndex == 3 && themeNotifier.isDark
-                        ? _selectedItemStyle
-                        : null,
-                  ),
-                  style: ListTileStyle.drawer,
-                  selected: _selectedIndex == 3,
-                  onTap: () {
-                    _onItemTapped(3);
                     Navigator.pop(context);
                   },
                 ),

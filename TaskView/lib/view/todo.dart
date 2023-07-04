@@ -2,94 +2,93 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// Classe que representa um lembrete
-class Lembrete {
+// Classe que representa uma tarefa
+class Task {
   String name;
+  bool isChecked;
   DateTime creationDate;
 
-  // Construtor da classe
-  Lembrete(this.name, {required this.creationDate});
+  Task(this.name, {this.isChecked = false, required this.creationDate});
 
-  // Converte o lembrete para um mapa (JSON)
+  // Converte a tarefa para um mapa JSON
   Map<String, dynamic> toJson() {
     return {
       'name': name,
+      'isChecked': isChecked,
       'creationDate': creationDate.toIso8601String(),
     };
   }
 
-  // Cria uma instância de Lembrete a partir de um mapa (JSON)
-  factory Lembrete.fromJson(Map<String, dynamic> json) {
-    return Lembrete(
+  // Cria uma instância de Task a partir de um mapa JSON
+  factory Task.fromJson(Map<String, dynamic> json) {
+    return Task(
       json['name'] as String,
+      isChecked: json['isChecked'] as bool,
       creationDate: DateTime.parse(json['creationDate'] as String),
     );
   }
 }
 
-// Classe responsável por salvar e carregar os lembretes utilizando o SharedPreferences
-class LembretePreferences {
-  static const String _kLembreteListKey = 'lembreteList';
+// Classe responsável pelo armazenamento das tarefas utilizando SharedPreferences
+class TaskPreferences {
+  static const String _kTaskListKey = 'taskList';
 
-  // Salva a lista de lembretes no SharedPreferences
-  static Future<void> saveLembretes(List<Lembrete> lembretes) async {
+  // Salva a lista de tarefas no SharedPreferences
+  static Future<void> saveTasks(List<Task> tasks) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String> lembreteJsonList =
-        lembretes.map((lembrete) => jsonEncode(lembrete.toJson())).toList();
-    await prefs.setStringList(_kLembreteListKey, lembreteJsonList);
+    final List<String> taskJsonList =
+        tasks.map((task) => jsonEncode(task.toJson())).toList();
+    await prefs.setStringList(_kTaskListKey, taskJsonList);
   }
 
-  // Carrega a lista de lembretes do SharedPreferences
-  static Future<List<Lembrete>> loadLembretes() async {
+  // Carrega a lista de tarefas do SharedPreferences
+  static Future<List<Task>> loadTasks() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String>? lembreteJsonList =
-        prefs.getStringList(_kLembreteListKey);
-    if (lembreteJsonList == null) {
+    final List<String>? taskJsonList = prefs.getStringList(_kTaskListKey);
+    if (taskJsonList == null) {
       return [];
     }
-    return lembreteJsonList
-        .map((lembreteJson) => Lembrete.fromJson(jsonDecode(lembreteJson)))
+    return taskJsonList
+        .map((taskJson) => Task.fromJson(jsonDecode(taskJson)))
         .toList();
   }
 }
 
-// Classe StatefulWidget que representa a tela de lembretes
-class Lembretes extends StatefulWidget {
-  const Lembretes({Key? key}) : super(key: key);
+// Widget principal da aplicação
+class ToDo extends StatefulWidget {
+  const ToDo({Key? key}) : super(key: key);
 
   @override
-  _LembretesState createState() => _LembretesState();
+  _ToDoState createState() => _ToDoState();
 }
 
-class _LembretesState extends State<Lembretes> {
-  List<Lembrete> lembretes = []; // Lista de lembretes
+class _ToDoState extends State<ToDo> {
+  List<Task> tasks = []; // Lista de tarefas
 
-  TextEditingController _lembreteController =
-      TextEditingController(); // Controlador para o campo de texto do lembrete
-  String _searchQuery = ''; // Consulta de pesquisa
+  final TextEditingController _taskController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
-    loadLembretes(); // Carrega os lembretes ao iniciar a tela
+    loadTasks(); // Carrega as tarefas ao inicializar o widget
   }
 
-  // Carrega os lembretes do SharedPreferences
-  void loadLembretes() async {
-    List<Lembrete> savedLembretes = await LembretePreferences.loadLembretes();
+  // Carrega as tarefas do SharedPreferences
+  void loadTasks() async {
+    List<Task> savedTasks = await TaskPreferences.loadTasks();
     setState(() {
-      lembretes = savedLembretes;
-      lembretes.sort((a, b) => b.creationDate.compareTo(a.creationDate));
+      tasks = savedTasks.reversed.toList(); // Inverte a lista de tarefas
     });
   }
 
-  // Salva os lembretes no SharedPreferences
-  void saveLembretes() async {
-    await LembretePreferences.saveLembretes(lembretes);
+  // Salva as tarefas no SharedPreferences
+  void saveTasks() async {
+    await TaskPreferences.saveTasks(tasks);
   }
 
-  // Exibe um dialog para criar um novo lembrete
-  void _showCreateLembreteDialog(BuildContext context) {
+  // Mostra o dialog para criar uma nova tarefa
+  void _showCreateTaskDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -97,18 +96,18 @@ class _LembretesState extends State<Lembretes> {
         final buttonColor = isDarkMode ? Colors.white : Colors.black;
 
         return AlertDialog(
-          title: const Text('Novo Lembrete'),
+          title: const Text('Nova Tarefa'),
           content: TextField(
-            controller: _lembreteController,
+            controller: _taskController,
             decoration: const InputDecoration(
-              hintText: 'Digite o nome do lembrete',
+              hintText: 'Digite o nome da tarefa',
             ),
             autofocus: true,
           ),
           actions: [
             TextButton(
               onPressed: () {
-                _lembreteController.clear();
+                _taskController.clear();
                 Navigator.pop(context);
               },
               child: Text(
@@ -121,17 +120,18 @@ class _LembretesState extends State<Lembretes> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  lembretes.add(Lembrete(
-                    _lembreteController.text,
-                    creationDate: DateTime.now(),
-                  ));
-                  lembretes
-                      .sort((a, b) => b.creationDate.compareTo(a.creationDate));
-                  _lembreteController.clear();
+                  tasks.insert(
+                    0, // Insere a nova tarefa no início da lista
+                    Task(
+                      _taskController.text,
+                      creationDate: DateTime.now(),
+                    ),
+                  );
+                  _taskController.clear();
                 });
                 Navigator.pop(context);
-                FocusScope.of(context).unfocus(); // Fechar o teclado
-                saveLembretes();
+                FocusScope.of(context).unfocus(); // Fecha o teclado
+                saveTasks();
               },
               child: Text(
                 'Salvar',
@@ -146,9 +146,9 @@ class _LembretesState extends State<Lembretes> {
     );
   }
 
-  // Exibe um dialog para editar um lembrete existente
-  void _showEditLembreteDialog(BuildContext context, int index) {
-    _lembreteController.text = lembretes[index].name;
+  // Mostra o dialog para editar uma tarefa existente
+  void _showEditTaskDialog(BuildContext context, int index) {
+    _taskController.text = tasks[index].name;
 
     showDialog(
       context: context,
@@ -157,18 +157,18 @@ class _LembretesState extends State<Lembretes> {
         final buttonColor = isDarkMode ? Colors.white : Colors.black;
 
         return AlertDialog(
-          title: const Text('Editar Lembrete'),
+          title: const Text('Editar Tarefa'),
           content: TextField(
-            controller: _lembreteController,
+            controller: _taskController,
             decoration: const InputDecoration(
-              hintText: 'Digite o nome do lembrete',
+              hintText: 'Digite o nome da tarefa',
             ),
             autofocus: true,
           ),
           actions: [
             TextButton(
               onPressed: () {
-                _lembreteController.clear();
+                _taskController.clear();
                 Navigator.pop(context);
               },
               child: Text(
@@ -181,12 +181,12 @@ class _LembretesState extends State<Lembretes> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  lembretes[index].name = _lembreteController.text;
-                  _lembreteController.clear();
+                  tasks[index].name = _taskController.text;
+                  _taskController.clear();
                 });
                 Navigator.pop(context);
-                FocusScope.of(context).unfocus(); // Fechar o teclado
-                saveLembretes();
+                FocusScope.of(context).unfocus(); // Fecha o teclado
+                saveTasks();
               },
               child: Text(
                 'Editar',
@@ -201,19 +201,19 @@ class _LembretesState extends State<Lembretes> {
     );
   }
 
-  // Retorna a lista de lembretes filtrada com base na consulta de pesquisa
-  List<Lembrete> getFilteredLembretes() {
+  // Retorna a lista de tarefas filtrada de acordo com a pesquisa
+  List<Task> getFilteredTasks() {
     if (_searchQuery.isEmpty) {
-      return lembretes;
+      return tasks;
     } else {
-      return lembretes
-          .where((lembrete) =>
-              lembrete.name.toLowerCase().contains(_searchQuery.toLowerCase()))
+      return tasks
+          .where((task) =>
+              task.name.toLowerCase().contains(_searchQuery.toLowerCase()))
           .toList();
     }
   }
 
-  // Retorna a data formatada com base no dia de hoje, ontem ou uma data específica
+  // Retorna a data formatada para exibição
   String getFormattedDate(DateTime date) {
     final now = DateTime.now();
     if (date.year == now.year &&
@@ -236,7 +236,7 @@ class _LembretesState extends State<Lembretes> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lembretes'),
+        title: const Text('Tarefas'),
       ),
       body: Column(
         children: [
@@ -244,18 +244,18 @@ class _LembretesState extends State<Lembretes> {
             padding: const EdgeInsets.all(10),
             child: Container(
               decoration: BoxDecoration(
-                color: Color.fromARGB(113, 170, 168, 168),
+                color: const Color.fromARGB(113, 170, 168, 168),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TextField(
                 style: TextStyle(
                   color: textColor,
                 ),
-                decoration: InputDecoration(
-                  hintText: 'Pesquisar lembrete',
+                decoration: const InputDecoration(
+                  hintText: 'Pesquisar tarefa',
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.all(10),
-                  prefixIcon: const Icon(Icons.search),
+                  contentPadding: EdgeInsets.all(10),
+                  prefixIcon: Icon(Icons.search),
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -267,25 +267,21 @@ class _LembretesState extends State<Lembretes> {
           ),
           Expanded(
             child: ListView.separated(
-              itemCount: getFilteredLembretes().length,
+              itemCount: getFilteredTasks().length,
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, index) {
-                final lembrete = getFilteredLembretes()[index];
-                final formattedDate = getFormattedDate(lembrete.creationDate);
+                final task = getFilteredTasks()[index];
+                final formattedDate = getFormattedDate(task.creationDate);
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (index == 0 ||
-                        lembrete.creationDate.day !=
-                            getFilteredLembretes()[index - 1]
-                                .creationDate
-                                .day ||
-                        lembrete.creationDate.month !=
-                            getFilteredLembretes()[index - 1]
-                                .creationDate
-                                .month ||
-                        lembrete.creationDate.year !=
-                            getFilteredLembretes()[index - 1].creationDate.year)
+                        task.creationDate.day !=
+                            getFilteredTasks()[index - 1].creationDate.day ||
+                        task.creationDate.month !=
+                            getFilteredTasks()[index - 1].creationDate.month ||
+                        task.creationDate.year !=
+                            getFilteredTasks()[index - 1].creationDate.year)
                       Padding(
                         padding: const EdgeInsets.only(top: 8, left: 16),
                         child: Text(
@@ -297,7 +293,7 @@ class _LembretesState extends State<Lembretes> {
                         ),
                       ),
                     Dismissible(
-                      key: Key(lembrete.name),
+                      key: Key(task.name),
                       direction: DismissDirection.startToEnd,
                       background: Container(
                         color: Colors.red,
@@ -311,29 +307,42 @@ class _LembretesState extends State<Lembretes> {
                       onDismissed: (direction) {
                         if (direction == DismissDirection.startToEnd) {
                           setState(() {
-                            lembretes.removeAt(index);
+                            tasks.removeAt(index);
                           });
-                          saveLembretes();
+                          saveTasks();
                         }
                       },
                       child: ListTile(
                         title: Row(
                           children: [
+                            Checkbox(
+                              value: task.isChecked,
+                              onChanged: (value) {
+                                setState(() {
+                                  task.isChecked = value!;
+                                });
+                                saveTasks();
+                              },
+                            ),
                             Expanded(
                               child: Text(
-                                lembrete.name,
+                                task.name,
                                 style: TextStyle(
-                                  color: textColor,
+                                  color:
+                                      task.isChecked ? Colors.grey : textColor,
+                                  decoration: task.isChecked
+                                      ? TextDecoration.lineThrough
+                                      : TextDecoration.none,
                                 ),
                               ),
                             ),
                             IconButton(
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.edit,
                                 color: Color.fromARGB(255, 255, 82, 2),
                               ),
                               onPressed: () {
-                                _showEditLembreteDialog(context, index);
+                                _showEditTaskDialog(context, index);
                               },
                             ),
                           ],
@@ -349,10 +358,15 @@ class _LembretesState extends State<Lembretes> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _showCreateLembreteDialog(context);
+          _showCreateTaskDialog(context);
         },
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: const Icon(Icons.add),
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        foregroundColor: Theme.of(context).colorScheme.onTertiary,
+        shape: const CircleBorder(),
+        child: const Icon(
+          Icons.add,
+          size: 30,
+        ),
       ),
     );
   }
