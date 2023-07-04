@@ -354,54 +354,6 @@ class AppTheme {
     }
   }
 
-  Color setSecondary(bool flag) {
-    if (flag == true) {
-      return Colors.black;
-    } else {
-      return Colors.white;
-    }
-  }
-
-  Color setTertiary(bool flag) {
-    if (flag == true) {
-      return Colors.black;
-    } else {
-      return Colors.white;
-    }
-  }
-
-  Color setOnPrimary(bool flag) {
-    if (flag == true) {
-      return Colors.black;
-    } else {
-      return Colors.white;
-    }
-  }
-
-  Color setOnSecondary(bool flag) {
-    if (flag == true) {
-      return Colors.black;
-    } else {
-      return Colors.white;
-    }
-  }
-
-  Color setOnTertiary(bool flag) {
-    if (flag == true) {
-      return Colors.black;
-    } else {
-      return Colors.white;
-    }
-  }
-
-  Color setDisabled(bool flag) {
-    if (flag == true) {
-      return Colors.black;
-    } else {
-      return Colors.white;
-    }
-  }
-
   Color getPrimary(bool flag) {
     if (flag == true) {
       return Colors.black;
