@@ -20,7 +20,7 @@ class TaskView extends StatelessWidget {
           return MaterialApp(
             title: 'Task View',
             theme:
-                themeNotifier.isDark ? AppTheme.darkTheme : ThemeData.light(),
+                themeNotifier.isDark ? AppTheme.darkTheme : AppTheme.lightTheme,
             debugShowCheckedModeBanner: false,
             home: NavBar(initialIndex: 0),
           );

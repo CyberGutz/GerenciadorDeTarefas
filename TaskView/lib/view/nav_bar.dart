@@ -53,18 +53,6 @@ class _NavBarState extends State<NavBar> {
               "Task View",
               textAlign: TextAlign.center,
             ),
-            actions: [
-              IconButton(
-                icon: Icon(themeNotifier.isDark
-                    ? Icons.nightlight_round
-                    : Icons.wb_sunny),
-                onPressed: () {
-                  setState(() {
-                    themeNotifier.isDark = !themeNotifier.isDark;
-                  });
-                },
-              ),
-            ],
           ),
           drawer: Drawer(
             child: ListView(

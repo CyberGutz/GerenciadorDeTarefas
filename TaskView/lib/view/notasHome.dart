@@ -200,6 +200,7 @@ class _NotasHomeState extends State<NotasHome> {
           backgroundColor: Colors.transparent,
           title: Text(
             getDataFormatada(notas[index].dataLastEdited),
+            style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
             textAlign: TextAlign.center,
           ),
         ),
